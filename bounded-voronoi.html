@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+<!--
+This is based off of Philippe Rivière’s Blocks at https://bl.ocks.org/Fil/aa92ffae75cc880f7880a3dd6da3ae18.
+I just wanted to make it take data from a pre-set list, instead of randomly generating
+data points each time it's loaded.
+-->
 <meta charset="utf-8">
 <style>
 
@@ -36,15 +41,19 @@
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 <script>
 
-var sourcedata = [ 100, 100, 200, 130, 400, 150, 160, 170, 130, 900, 100, 1000, 200, 130, 40, 150, 160, 170, 130 ];
+var sourcedata = [
+  100, 100, 200, 130, 400,
+  150, 360, 170, 130, 900,
+  100, 500, 200, 130, 482,
+  150, 160, 170, 130, 400 ];
 
-var svg = d3.select("svg"),
-width = +svg.attr("width"),
-height = +svg.attr("height"),
-margin = 0.4; // 0 ≤ m < 0.5
+var svg = d3.select("svg");
+var width = svg.attr("width");
+var height = svg.attr("height");
+var margin = 0.1; // 0 ≤ m < 0.5
 
-var color = d3.scaleOrdinal(d3.schemePastel1),
-line = d3.line().curve(d3.curveCatmullRomClosed);
+var color = d3.scaleOrdinal(d3.schemePastel1);
+var line = d3.line().curve(d3.curveCatmullRomClosed);
 
 function makeData (inputData) {
   var outputData = [];
@@ -88,11 +97,6 @@ function makeData (inputData) {
   .attr("class", "sites");
 
   redraw();
-
-  function moved() {
-    sites[0] = d3.mouse(this);
-    redraw();
-  }
 
   function redraw() {
 
@@ -144,15 +148,6 @@ function makeData (inputData) {
     .call(redrawLink)
     .exit()
     .remove();
-
-    var s = site
-    .selectAll("circle")
-    .data(sites);
-    s.enter()
-    .append("circle")
-    .attr("r", 2.5)
-    .merge(s)
-    .call(redrawSite);
 
     convexhull.attr('d', line(convex));
 
